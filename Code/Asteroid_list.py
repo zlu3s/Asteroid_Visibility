@@ -8,7 +8,7 @@ import re
 from indiv_ast import Asteroid
 
 from skyfield.api import load, Topos
-from skyfield.almanac import find_discrete, sunrise_sunset
+from skyfield.almanac import find_discrete, dark_twilight_day, sunrise_sunset
 
 url = "https://ssd.jpl.nasa.gov/api/horizons.api"
 
@@ -110,39 +110,7 @@ def indiv_params(input):
         parameters["CENTER"] = "'G37'"
     return parameters
 
-"""
-def search_asts(df, params):
-    print("There are {} asteroids in the list".format(len(df)))
-    
-    count = int(input("How many asteroids would you like to query: "))
-    
-    while True:
-        for i, desig in enumerate(df["Primary Desig"].head(count)):
-            name = df["Name"].iloc[i]
-            ast = Asteroid(desig, name) 
-            ast.set_params(params)
-            print("Gathering data for {}...".format(name))
-            response = requests.get(url, data=ast.params)
-            data = response.json()
-            if "\nNo site matches." in data['result']:
-                print("No site matches for {}".format(ast.desig))
-            else:
-                ast.get_ephem(data)
-                ast.get_header(data)
-                ast.set_df()  
-                print(ast.df)
-        df = df.iloc[count:]
-        answer = input("Would you like to observe more asteroid info? (Y/N): ").strip().upper()
-        if answer == "Y":
-            more = input("How many more asteroids would you like to observe: ")
-            if more.isdigit():  # Ensure valid input
-                count = int(more)
-            else:
-                print("Invalid input, exiting.")
-                break
-        else:
-            break
-"""
+
 
 def sort_ast(df, params):
     print("Begin Asteroid Sorting Process. There are {} total asteroids in the list.".format(len(df)))
@@ -151,7 +119,7 @@ def sort_ast(df, params):
         name = df["Name"].iloc[i]
         ast = Asteroid(desig, name) 
         ast.set_params(params)
-        print("{}: Gathering data for {}...".format(i, name))
+        print("\n{}: Gathering data for {}...".format(i, name))
         response = requests.get(url, data=ast.params)
         data = response.json()
         ast.get_ephem(data)
@@ -164,8 +132,10 @@ def sort_ast(df, params):
             if value == "n.a.":
                 add = False
                 print("Does not constrain to air mass")
+                break
         if add: valid_ast[ast.desig] = ast.df
     return valid_ast
+
 
 
 def get_sun(params):
@@ -175,7 +145,7 @@ def get_sun(params):
     # Load ephemeris
     eph = load('de421.bsp')
     ts = load.timescale()
-    rise_set = {}
+    dusk_dawn = {}
 
     place = params['CENTER'].strip("'")
     location = locations[place]
@@ -186,28 +156,26 @@ def get_sun(params):
     start_time = ts.utc(int(start[0]), int(start[1]), int(start[2]), noon)
     end_time = ts.utc(int(end[0]), int(end[1]), int(end[2]), noon)
 
-    # Get the sunrise and sunset functions
-    f = sunrise_sunset(eph, location)
+    g = dark_twilight_day(eph, location)
 
-    # Find discrete events (sunrise, sunset) within the time range
-    times, events = find_discrete(start_time, end_time, f)
+    astro_times, astro_events = find_discrete(start_time, end_time, g)
 
-    # Print results
-    for t, e in zip(times, events):
-        event_name = "Sunrise" if e == 1 else "Sunset"
-        rise_set[event_name] = t.utc_datetime()
+    for t,e in zip(astro_times, astro_events):
+        if e == 0: event_name = "Dusk"
+        elif e == 1: event_name = "Dawn"
+        dusk_dawn[event_name] = t.utc_datetime()
 
-    rise_set["Sunrise"] = rise_set["Sunrise"].strftime("%Y-%m-%d %H:%M:%S")
-    rise_set["Sunset"] = rise_set["Sunset"].strftime("%Y-%m-%d %H:%M:%S")
-    params["START_TIME"] = "'{}'".format(rise_set["Sunset"])
-    params["STOP_TIME"] = "'{}'".format(rise_set["Sunrise"])
-
+    dusk_dawn["Dusk"] = dusk_dawn["Dusk"].strftime("%Y-%m-%d %H:%M:%S")
+    dusk_dawn["Dawn"] = dusk_dawn["Dawn"].strftime("%Y-%m-%d %H:%M:%S")
+    params["START_TIME"] = "'{}'".format(dusk_dawn["Dusk"])
+    params["STOP_TIME"] = "'{}'".format(dusk_dawn["Dawn"])
     return params
+
 
 
 def print_valid_ast(valid_ast):
     for k,v in valid_ast.items():
-        print("{}\n{}".format(k,v))
+        print("{}\n{}\n".format(k,v))
 
 
 def main():
@@ -222,7 +190,7 @@ def main():
 
     adjusted_params = get_sun(params)
     valid_ast = sort_ast(df, adjusted_params)
-    print(valid_ast)
+    print_valid_ast(valid_ast)
 
 
 if __name__ == "__main__":
