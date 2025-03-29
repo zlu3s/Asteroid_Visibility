@@ -161,9 +161,8 @@ def get_sun(params):
     astro_times, astro_events = find_discrete(start_time, end_time, g)
 
     for t,e in zip(astro_times, astro_events):
-        if e == 0: event_name = "Dusk"
-        elif e == 1: event_name = "Dawn"
-        dusk_dawn[event_name] = t.utc_datetime()
+        if e == 0: dusk_dawn["Dusk"] = t.utc_datetime()
+        elif e == 1: dusk_dawn["Dawn"] = t.utc_datetime()
 
     dusk_dawn["Dusk"] = dusk_dawn["Dusk"].strftime("%Y-%m-%d %H:%M:%S")
     dusk_dawn["Dawn"] = dusk_dawn["Dawn"].strftime("%Y-%m-%d %H:%M:%S")
