@@ -104,9 +104,8 @@ def indiv_params(input):
 
     if parameters["CENTER"] == "'UKIRT'":
         parameters["CENTER"] = "'V38'"
-    elif parameters["CENTER"] == "'TUCSON'":
+    elif parameters["CENTER"].upper() == "'TUCSON'":
         parameters["CENTER"] = "'G37'"
-
     return parameters
 
 
@@ -122,10 +121,13 @@ def search_asts(df, params):
             ast.set_params(params)
             response = requests.get(url, data=ast.params)
             data = response.json()
-            ast.get_ephem(data)
-            ast.get_header(data)
-            ast.set_df()  
-            print(ast.df)
+            if "\nNo site matches." in data['result']:
+                print("No site matches for {}".format(ast.desig))
+            else:
+                ast.get_ephem(data)
+                ast.get_header(data)
+                ast.set_df()  
+                print(ast.df)
         answer = input("Would you like to observe more asteroid info? (Y/N): ").strip().upper()
         if answer == "Y":
             more = input("How many more asteroids would you like to observe: ")
