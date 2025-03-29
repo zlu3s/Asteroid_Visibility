@@ -23,7 +23,10 @@ class Asteroid:
                 lock = True
             if end in line:
                 lock = False
-        self.ephem.pop(-1)
+        if len(self.ephem) == 0:
+            print("Empty asteroid ephemeris")
+        else:
+            self.ephem.pop(-1)
 
     def get_header(self, data):
         results = data['result']
