@@ -4,7 +4,7 @@
 | PARAMETER: VALUE
 | 
 | These will be used to search for specific targets, and will largely be automated, swapping out
-| the name as necessary.
+| the name as necessary. Either use UKIRT or Tucson for CENTER
 ---------------------------------------------------------------------------------------------------
 $
 format: json
