@@ -28,7 +28,7 @@ def get_list_params(input):
         if stop in lines:
             break
         if check:
-            line = lines.split(":")
+            line = lines.split(": ")
             parameters[line[0]] = line[1].strip("\n")
         if start in lines:
             check = True
@@ -97,15 +97,15 @@ def indiv_params(input):
         if stop in lines:
             break
         if check:
-            line = lines.split(":")
+            line = lines.split(": ")
             parameters[line[0]] = line[1].strip("\n")
         if start in lines:
             check = True
 
-    if parameters["CENTER"] == "UKIRT":
-        parameters["CENTER"] = "V38"
-    elif parameters["CENTER"] == "TUCSON":
-        parameters["CENTER"] = "G37"
+    if parameters["CENTER"] == "'UKIRT'":
+        parameters["CENTER"] = "'V38'"
+    elif parameters["CENTER"] == "'TUCSON'":
+        parameters["CENTER"] = "'G37'"
 
     return parameters
 
@@ -140,17 +140,20 @@ def search_asts(df, params):
 
 
 def get_sun(params):
+    start = params["START_TIME"].strip("'").split("-")
+    end = params["STOP_TIME"].strip("'").split("-")
+
     # Load ephemeris
     eph = load('de421.bsp')
     ts = load.timescale()
-    times = {}
+    rise_set = {}
 
     # Define location (Tucson, AZ)
     location = Topos(latitude_degrees=32.2226, longitude_degrees=-110.9747)
 
     # Define time range
-    start_time = ts.utc(2025, 3, 19)
-    end_time = ts.utc(2025, 3, 20)
+    start_time = ts.utc(int(start[0]), int(start[1]), int(start[2]))
+    end_time = ts.utc(int(end[0]), int(end[1]), int(end[2]))
 
     # Get the sunrise and sunset function
     f = sunrise_sunset(eph, location)
@@ -161,8 +164,8 @@ def get_sun(params):
     # Print results
     for t, e in zip(times, events):
         event_name = "Sunrise" if e == 1 else "Sunset"
-        times[event_name] = t.utc_datetime()
-    return times
+        rise_set[event_name] = t.utc_datetime()
+    return rise_set
 
 
 
@@ -175,8 +178,10 @@ def main():
 
     params = indiv_params("C:/Users/Research/Asteroid Project/in_out/Input_Parameters.txt")
     df = gen_panda(list, header)
-    #times = get_sun(list_params)
-    #print("Sunrise: {}\nSunset: {}".format(times["Sunrise"], times["Sunset"]))
+
+    times = get_sun(params)
+    print("Sunrise: {}\nSunset: {}".format(times["Sunrise"], times["Sunset"]))
+
     search_asts(df, params)
 
 
