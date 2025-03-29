@@ -1,0 +1,31 @@
+* Individual Parameters
+---------------------------------------------------------------------------------------------------
+| These are the parameters given to JPL Horizons, and need to remain in the given format:
+| PARAMETER: VALUE
+| 
+| These will be used to search for specific targets, and will largely be automated, swapping out
+| the name as necessary.
+---------------------------------------------------------------------------------------------------
+$
+format: json
+COMMAND: ''
+CENTER: 'Tucson'
+MAKE_EPHEM: 'YES'
+EPHEM_TYPE: 'OBSERVER'
+OBJ_DATA: 'NO'
+START_TIME: '2025-03-01'
+STOP_TIME: '2025-03-02'
+STEP_SIZE: '1h'
+QUANTITIES: '8,9'
+$$
+
+
+
+* Mass Search Parameters (MSP)
+---------------------------------------------------------------------------------------------------
+| These are the parameters for all asteroids being searched for (i.e. Absolute Mag, Type, etc.)
+---------------------------------------------------------------------------------------------------
+&
+format: json
+COMMAND: 'B-V < 1; H > 9; H < 15; STYP = S'
+&&
