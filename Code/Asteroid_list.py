@@ -151,7 +151,8 @@ def get_sun(params):
     rise_set = {}
 
     # Define location (Tucson, AZ)
-    location = Topos(latitude_degrees=32.2226, longitude_degrees=-110.9747)
+    place = params['CENTER'].strip("'")
+    location = locations[place]
 
     # Define time range
     start_time = ts.utc(int(start[0]), int(start[1]), int(start[2]))
@@ -167,7 +168,11 @@ def get_sun(params):
     for t, e in zip(times, events):
         event_name = "Sunrise" if e == 1 else "Sunset"
         rise_set[event_name] = t.utc_datetime()
-    return rise_set
+
+    params["START_TIME"] = "'{} {}'".format(start, times["Sunrise"])
+    params["STOP_TIME"] = "'{} {}'".format(end, times["Sunset"])
+
+    return rise_set, params
 
 
 
@@ -181,10 +186,8 @@ def main():
     params = indiv_params("C:/Users/Research/Asteroid Project/in_out/Input_Parameters.txt")
     df = gen_panda(list, header)
 
-    times = get_sun(params)
-    print("Sunrise: {}\nSunset: {}".format(times["Sunrise"], times["Sunset"]))
-
-    search_asts(df, params)
+    times, adjusted_params = get_sun(params)
+    search_asts(df, adjusted_params)
 
 
 
