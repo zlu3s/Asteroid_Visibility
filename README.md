@@ -6,8 +6,10 @@
 
 <details>
     <summary>
-        <b>
-            How to Download
-        </b>
+        <h2>
+            <b>
+                How to Download
+            </b>
+        </h2>
     </summary>
 </details>
