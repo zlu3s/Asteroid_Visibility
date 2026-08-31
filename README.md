@@ -12,4 +12,9 @@
             </b>
         </h2>
     </summary>
+
+    <p>
+        In a terminal, run:
+        <code> git clone git@github.com:zlu3s/Asteroid_Visibility.git </code>
+    </p>
 </details>
