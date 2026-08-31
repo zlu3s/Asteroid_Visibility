@@ -3,3 +3,11 @@
         Asteroid Visibility
     </p>
 </h1>
+
+<details>
+    <summary>
+        <b>
+            How to Download
+        </b>
+    </summary>
+</details>
