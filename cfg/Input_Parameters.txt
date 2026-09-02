@@ -1,11 +1,13 @@
 * Individual Parameters
----------------------------------------------------------------------------------------------------
-| These are the parameters given to JPL Horizons, and need to remain in the given format:
+----------------------------------------------------------------------
+| These are the parameters given to JPL Horizons, and need to remain 
+| in the given format:
 | PARAMETER: VALUE
 | 
-| These will be used to search for specific targets, and will largely be automated, swapping out
-| the name as necessary. Either use UKIRT or Tucson for CENTER
----------------------------------------------------------------------------------------------------
+| These will be used to search for specific targets, and will largely 
+| be automated, swapping out the name as necessary. Either use UKIRT 
+| or Tucson for CENTER
+----------------------------------------------------------------------
 $
 format: json
 COMMAND: ''
@@ -22,9 +24,10 @@ $$
 
 
 * Mass Search Parameters (MSP)
----------------------------------------------------------------------------------------------------
-| These are the parameters for all asteroids being searched for (i.e. Absolute Mag, Type, etc.)
----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------
+| These are the parameters for all asteroids being searched for (i.e. 
+| Absolute Mag, Type, etc.)
+----------------------------------------------------------------------
 &
 format: json
 COMMAND: 'B-V < 1; H > 9; H < 15; STYP = S'

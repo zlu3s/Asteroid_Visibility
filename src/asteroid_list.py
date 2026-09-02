@@ -4,8 +4,12 @@ Gets list of asteroids from the given parameters in the input file
 import requests
 import pandas as pd
 import re
+import os, sys
 
-from indiv_ast import Asteroid
+home = os.getenv('AST_HOME')
+sys.path.insert(0, f"{home}/src")
+
+from asteroid import Asteroid
 
 from skyfield.api import load, Topos
 from skyfield.almanac import find_discrete, dark_twilight_day, sunrise_sunset
@@ -35,7 +39,6 @@ def get_list_params(input):
         if start in lines:
             check = True
     return parameters
-
 
 
 def get_lists(data):
@@ -179,12 +182,12 @@ def print_valid_ast(valid_ast):
 
 def main():
     
-    list_params = get_list_params("C:/Users/Research/Asteroid Project/in_out/Input_Parameters.txt")
+    list_params = get_list_params(f"{home}/cfg/Input_Parameters.txt")
     list_response = requests.get(url, params=list_params)
     list_data = list_response.json()
     list, header = get_lists(list_data)
 
-    params = indiv_params("C:/Users/Research/Asteroid Project/in_out/Input_Parameters.txt")
+    params = indiv_params(f"{home}/cfg/Input_Parameters.txt")
     df = gen_panda(list, header)
 
     adjusted_params = get_sun(params)
