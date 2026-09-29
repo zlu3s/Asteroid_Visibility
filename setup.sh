@@ -1,6 +1,7 @@
 #!/usr/bin/bash
 
 export AST_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export PYTHONPATH="${AST_HOME}/src:${PYTHONPATH}"
 
 if [ ! -d "${AST_HOME}/.venv" ]; then
     echo "Setting up Virtual Environment"
