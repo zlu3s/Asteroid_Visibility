@@ -33,6 +33,17 @@ class SB_Interface(Interface):
         fields = self.response['fields_second']
         data = self.response['data_second_pass']
         df = pd.DataFrame(data, columns=fields)
-        df = df.sort_values('Visual magnitude (V)')
         return df
         
+
+class IP_Interface(Interface):
+    _params = {}
+
+    @property
+    def params(self):
+        self._params.update(self.config)
+        return self._params
+
+    @property
+    def data(self):
+        return
