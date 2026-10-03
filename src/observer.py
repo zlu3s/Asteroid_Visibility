@@ -47,7 +47,7 @@ class Observer:
     def time(self, val):
         if type(val) == str:
             try:
-                self._time = datetime.strptime(val, "%Y-%m-%d_%H:%M:%S")
+                self._time = datetime.strptime(val, "%Y-%m-%d %H:%M:%S")
             except:
                 print(f"Invalid format from time {val}. Must be Y-m-d H:M:S")
         elif type(val) == datetime:

@@ -46,4 +46,4 @@ class IP_Interface(Interface):
 
     @property
     def data(self):
-        return
+        return self.response

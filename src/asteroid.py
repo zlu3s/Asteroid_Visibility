@@ -3,33 +3,41 @@ import pandas as pd
 
 
 class Asteroid:
-    def __init__(self,desig,name):
+    def __init__(self,name,data,desig=None):
         self.desig = desig
         self.name = name
-        self.params = {}
-        self.ephem = []
-        self.header = []
-        self.df = None
-    
-    def get_ephem(self, data):
-        results = data['result']
-        lines = results.split("\n")
-        lock = False
-        start = "$$SOE"; end = "$$EOE"
-        for line in lines:
-            if lock:
-                self.ephem.append(line)
-            if start in line:
-                lock = True
-            if end in line:
-                lock = False
-        if len(self.ephem) == 0:
-            print("Empty asteroid ephemeris")
-        else:
-            self.ephem.pop(-1)
+        self.data = data
+        self._ephem = []
+        self._header = []
+        self.setup()
 
-    def get_header(self, data):
-        results = data['result']
+
+    def setup(self):
+        self.ephem
+        self.header
+
+    @property
+    def ephem(self):
+        results = self.data['result']
+        lines = results.split("\n")
+        start = "$$SOE"; end = "$$EOE"
+        add = False
+        for line in lines:
+            if start in line:
+                add = True
+            elif end in line:
+                add = False
+            elif add:
+                line = re.split(r"\s{2,}", line)
+                if line[1] == 'm':
+                    line[0] = f"{line[0]} {line[1]}"
+                    line.pop(1)
+                self._ephem.append(line)
+        return self._ephem
+
+    @property
+    def header(self):
+        results = self.data['result']
         lines = results.split("\n")
         i = 0
         check = "$$SOE"
@@ -38,20 +46,11 @@ class Asteroid:
                 start = i-2
                 break
             i += 1
-        self.header = re.split(r"\s+",lines[start:i-1][0])
-        self.header.pop(0)
-    
-    def set_params(self,params):
-        params['COMMAND'] = "'NAME={f.desig}'".format(f=self)
-        self.params = params
+        header_line = lines[start:i-1][0]
+        self._header = re.split(r"\s+", header_line)
+        self._header.pop(0)
+        return self._header
 
-    def set_df(self):
-        data = {}
-        i = 0
-        while i < len(self.ephem):
-            line = re.split(r"\s{2,}", self.ephem[i])
-            self.ephem[i] = line
-            i += 1
-        for i in range(len(self.header)):
-            data[self.header[i]] = [line[i] for line in self.ephem]
-        self.df = pd.DataFrame(data)
+    @property
+    def df(self):
+        return pd.DataFrame(self._ephem, columns=self._header)
