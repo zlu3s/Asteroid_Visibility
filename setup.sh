@@ -20,4 +20,4 @@ else
 fi
 
 source $AST_HOME/.venv/bin/activate
-alias asteroid="$AST_HOME/bin/asteroid.sh"
+alias ast_search="$AST_HOME/bin/ast_search.sh"

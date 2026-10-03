@@ -51,6 +51,7 @@ if __name__ == "__main__":
     parser.add_argument('start_time', type=valid_time, help="Start Time of Query")
     parser.add_argument('-a','--asteroids', nargs="*", default=None, help="List of asteroid names")
     parser.add_argument('-l', '--length', type=float, default=12, help="Hours")
+    parser.add_argument('-p', '--print', action='store_true', help="Print to terminal")
     args = parser.parse_args()
     start_time = args.start_time.strftime("%Y-%m-%d %H:%M:%S")
     stop_time = (args.start_time+timedelta(hours=args.length)).strftime("%Y-%m-%d %H:%M:%S")
@@ -61,5 +62,8 @@ if __name__ == "__main__":
             output = ip_query(start_time, stop_time, name)
             ast = Asteroid(name, data)
             data = ast.df
-
-    print(data)
+    
+    if args.print:
+        print(data)
+    else:
+        data.to_csv(f"{home}/dat/output", sep="\t")
