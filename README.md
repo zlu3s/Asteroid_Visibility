@@ -31,7 +31,8 @@
         In project home directory, run:
         <code> 
             source setup.sh
-            ast_search <YYYY-mm-dd_HH:MM:SS> (-a <ast_name1> <ast_name2> ... -l <obs_length_hours> )
+            ast_search <YYYY-mm-dd_HH:MM:SS> (-a <ast_name1> ... -l <obs_length_hours> )
+            bg_star <20h30m41.00s 13d30m19.0s (-g)
         </code>
     </p>
 </details>
