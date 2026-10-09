@@ -30,10 +30,18 @@ class SB_Interface(Interface):
 
     @property
     def data(self):
-        fields = self.response['fields_second']
-        data = self.response['data_second_pass']
-        df = pd.DataFrame(data, columns=fields)
-        return df
+        try:
+            fields = self.response['fields_second']
+            data = self._response['data_second_pass']
+            df = pd.DataFrame(data, columns=fields)
+            df.columns = ['Name', 'RA', 'DEC',            \
+                          'Dist from RA', 'Dist from Dec',\
+                          'Dist from Norm', 'Vmag',       \
+                          'RA rate', 'Dec rate']
+            return df
+        except:
+            print(self.response)
+            raise ValueError
         
 
 class IP_Interface(Interface):

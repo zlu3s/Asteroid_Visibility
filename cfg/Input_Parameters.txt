@@ -18,7 +18,7 @@ OBJ_DATA: 'NO'
 START_TIME: '2026-10-09'
 STOP_TIME: '2026-10-10'
 STEP_SIZE: '1h'
-QUANTITIES: '1,3'
+QUANTITIES: '2, 3, 8'
 &&
 
 
@@ -40,6 +40,7 @@ COMMAND: 'ROTPER < 1; H < 12'
 ----------------------------------------------------------------------
 &
 sb-kind:'a'
+sb-cdata:{"AND":["rot_per|LT|4"]}
 lat: '32.41647'
 lon: '-110.73453'
 alt: '2.510'

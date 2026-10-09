@@ -21,3 +21,4 @@ fi
 
 source $AST_HOME/.venv/bin/activate
 alias ast_search="$AST_HOME/bin/ast_search.sh"
+alias bg_star="$AST_HOME/bin/bg_star.sh"
